@@ -1,23 +1,19 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '../supabaseClient';
-import { Link } from 'react-router-dom';
+import useSWR from 'swr'
+import { supabase } from '../supabaseClient'
+import { Link } from 'react-router-dom'
+
+const fetcher = async () => {
+  const { data } = await supabase.from('sops').select('*').order('created_at', { ascending: false })
+  return data || []
+}
 
 export default function Dashboard() {
-  const [sops, setSops] = useState([]);
-
-  const fetchSops = async () => {
-    const { data } = await supabase.from('sops').select('*').order('created_at', { ascending: false });
-    setSops(data || []);
-  };
+  const { data: sops = [], mutate } = useSWR('sops', fetcher)
 
   const handleDelete = async (id) => {
-    await supabase.from('sops').delete().eq('id', id);
-    fetchSops();
-  };
-
-  useEffect(() => {
-    fetchSops();
-  }, []);
+    await supabase.from('sops').delete().eq('id', id)
+    mutate()
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-4">
@@ -35,5 +31,5 @@ export default function Dashboard() {
         ))}
       </ul>
     </div>
-  );
+  )
 }
