@@ -1,0 +1,39 @@
+name: CI
+on:
+  push:
+    branches: [ work ]
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci --prefix smart-sops
+      - run: npm run lint --prefix smart-sops
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci --prefix smart-sops
+      - run: npm run test --prefix smart-sops
+
+  codeql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: github/codeql-action/init@v2
+        with:
+          languages: javascript
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci --prefix smart-sops
+      - uses: github/codeql-action/analyze@v2
