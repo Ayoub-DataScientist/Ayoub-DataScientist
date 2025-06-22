@@ -1,0 +1,11 @@
+{
+  "name": "pipeline-debugger",
+  "version": "0.1.0",
+  "bin": {
+    "pipeline-debugger": "index.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}
